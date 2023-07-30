@@ -66,8 +66,8 @@ mongoose.connect(process.env.MONGO_URL, {
     });
 
     //dummy data, inserted only once at start 
-    // User.insertMany(users);
-    // Post.insertMany(posts);
+    User.insertMany(users);
+    Post.insertMany(posts);
 }).catch((e) => {
     console.log('Could not connect to database');
 });
