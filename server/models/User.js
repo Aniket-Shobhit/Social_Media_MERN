@@ -18,6 +18,11 @@ const UserSchema = new mongoose.Schema({
         required: true,
         min: 5
     },
+    password: {
+        type: String,
+        required: true,
+        min: 5
+    },
     picturePath: {
         type: String,
         default: ''
