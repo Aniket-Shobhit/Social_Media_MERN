@@ -27,7 +27,10 @@ app.use(helmet());
 app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin'}));
 app.use(bodyParser.json({ limit: '30mb', extended: true}));
 app.use(bodyParser.urlencoded({ limit:'30mb', extended: true }));
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+    origin:["http://localhost:3000","https://social-media-app-ux8x.onrender.com"]
+}));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
 
@@ -53,7 +56,7 @@ app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 
-const PORT = process.env.PORT || 6001;
+const PORT = process.env.PORT || 3001;
 mongoose.connect(process.env.MONGO_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true
