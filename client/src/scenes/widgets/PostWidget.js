@@ -36,7 +36,7 @@ const PostWidget = ({
   
     const patchLike = async () => {
         console.log('upar');
-        const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+        const response = await fetch(`https://social-media-mern-7r25.onrender.com/posts/${postId}/like`, {
             method: 'PATCH',
             headers: {
                 Authorization: `Bearer ${token}`,
