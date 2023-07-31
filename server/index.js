@@ -70,7 +70,7 @@ mongoose.connect(process.env.MONGO_URL, {
     // User.insertMany(users);
     // Post.insertMany(posts);
 }).catch((e) => {
-    console.log('Could not connect to database');
+    console.log(e.message);
 });
 
 
