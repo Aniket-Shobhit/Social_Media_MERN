@@ -17,13 +17,13 @@ import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
 const registerSchema = yup.object().shape({
-    firstName: yup.string().required("required"),
-    lastName: yup.string().required("required"),
-    email: yup.string().email("invalid email").required("required"),
-    password: yup.string().required("required"),
-    location: yup.string().required("required"),
-    occupation: yup.string().required("required"),
-    picture: yup.string().required("required"),
+    firstName: yup.string().required("required").min(1),
+    lastName: yup.string().required("required").min(1),
+    email: yup.string().email("invalid email").required("required").min(1),
+    password: yup.string().required("required").min(1),
+    location: yup.string().required("required").min(1),
+    occupation: yup.string().required("required").min(1),
+    picture: yup.string().required("required").min(1),
 });
 
 const loginSchema = yup.object().shape({
@@ -59,7 +59,7 @@ const Form = () => {
         // this allows us to send form info with image
         const formData = new FormData();
         for (let value in values) {
-        formData.append(value, values[value]);
+            formData.append(value, values[value]);
         }
         formData.append("picturePath", values.picture.name);
 

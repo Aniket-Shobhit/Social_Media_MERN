@@ -2,8 +2,9 @@ import express from 'express';
 import cors from 'cors';
 import bodyParser from 'body-parser';
 import multer from 'multer';
-// import helmet from 'helmet';
 import path from 'path';
+import morgan from 'morgan';
+import helmet from 'helmet';
 import { fileURLToPath } from 'url'
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
@@ -20,25 +21,29 @@ import { users, posts } from './data/index.js';
 // configurations
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
 dotenv.config();
 const app = express();
+
 app.use(express.json());
-// app.use(helmet());
-// app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin'}));
+app.use(helmet());
+app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin'}));
+app.use(morgan("common"));
 app.use(bodyParser.json({ limit: '30mb', extended: true}));
 app.use(bodyParser.urlencoded({ limit:'30mb', extended: true }));
-// app.use(cors());
+app.use(cors());
 app.use((req, res, next) => {
     res.append('Access-Control-Allow-Origin', ["*"]);
     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
     res.append('Access-Control-Allow-Headers', 'Content-Type');
     next();
 });
-app.use(cors({
-    origin:["http://localhost:3001","https://social-media-mern-7r25.onrender.com"]
-}));
-app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
+
+// app.use(cors({
+//     origin:["https://social-media-mern-7r25.onrender.com"]
+// }));
+app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
 // file storage
 const storage = multer.diskStorage({
