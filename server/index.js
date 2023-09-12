@@ -40,9 +40,9 @@ app.use((req, res, next) => {
 });
 
 
-// app.use(cors({
-//     origin:["https://social-media-mern-7r25.onrender.com"]
-// }));
+app.use(cors({
+    origin:["https://social-media-mern-7r25.onrender.com"]
+}));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
 // file storage
