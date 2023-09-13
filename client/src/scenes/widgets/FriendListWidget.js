@@ -13,7 +13,7 @@ const FriendListWidget = ({ userId }) => {
 
     const getFriends = async () => {
         const response = await fetch(
-        `https://social-media-mern-7r25.onrender.com/users/${userId}/friends`,
+        `${process.env.REACT_APP_URL}/users/${userId}/friends`,
         {
             method: "GET",
             headers: { Authorization: `Bearer ${token}` },

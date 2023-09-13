@@ -15,7 +15,7 @@ const ProfilePage = () => {
     const isNonMobileScreens = useMediaQuery("(min-width:1000px)");
 
     const getUser = async () => {
-        const response = await fetch(`https://social-media-mern-7r25.onrender.com/users/${userId}`, {
+        const response = await fetch(`${process.env.REACT_APP_URL}/users/${userId}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
         });

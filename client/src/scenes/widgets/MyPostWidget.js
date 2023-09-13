@@ -51,7 +51,7 @@ const MyPostWidget = ({ picturePath }) => {
             formData.append('picturePath', image.name);
         }
 
-        const response = await fetch(`https://social-media-mern-7r25.onrender.com/posts`, {
+        const response = await fetch(`${process.env.REACT_APP_URL}/posts`, {
             method: 'POST',
             headers: { Authorization: `Bearer ${token}` },
             body: formData,
