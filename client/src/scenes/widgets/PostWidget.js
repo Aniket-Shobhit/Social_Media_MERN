@@ -18,8 +18,8 @@ const PostWidget = ({
     name,
     description,
     location,
-    picturePath,
-    userPicturePath,
+    pictureUrl,
+    userPictureUrl,
     likes,
     comments,
 }) => {
@@ -55,18 +55,18 @@ const PostWidget = ({
         friendId={postUserId}
         name={name}
         subtitle={location}
-        userPicturePath={userPicturePath}
+        userPictureUrl={userPictureUrl}
       />
       <Typography color={main} sx={{ mt: "1rem" }}>
         {description}
       </Typography>
-      {picturePath && (
+      {pictureUrl && (
         <img
           width="100%"
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`${process.env.REACT_APP_URL}/assets/${picturePath}`}
+          src={pictureUrl}
         />
       )}
       <FlexBetween mt="0.25rem">

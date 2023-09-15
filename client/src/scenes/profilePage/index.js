@@ -41,7 +41,7 @@ const ProfilePage = () => {
                 justifyContent="center"
             >
                 <Box flexBasis={isNonMobileScreens ? "26%" : undefined}>
-                    <UserWidget userId={userId} picturePath={user.picturePath} />
+                    <UserWidget userId={userId} pictureUrl={user.pictureUrl} />
                     <Box m="2rem 0" />
                         <FriendListWidget userId={userId} />
                     </Box>
@@ -49,7 +49,7 @@ const ProfilePage = () => {
                 flexBasis={isNonMobileScreens ? "42%" : undefined}
                 mt={isNonMobileScreens ? undefined : "2rem"}
                 >
-                    <MyPostWidget picturePath={user.picturePath} />
+                    <MyPostWidget pictureUrl={user.pictureUrl} />
                     <Box m="2rem 0" />
                     <PostsWidget userId={userId} isProfile />
                 </Box>

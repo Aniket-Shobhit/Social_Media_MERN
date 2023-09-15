@@ -1,4 +1,5 @@
 import { useState } from "react";
+import axios from "axios";
 import {
     Box,
     Button,
@@ -19,7 +20,7 @@ import FlexBetween from "components/FlexBetween";
 const registerSchema = yup.object().shape({
     firstName: yup.string().required("required"),
     lastName: yup.string().required("required"),
-    email: yup.string().email("invalid email").required("required"),
+    email: yup.string().email("invalidddd email").required("required"),
     password: yup.string().required("required"),
     location: yup.string().required("required"),
     occupation: yup.string().required("required"),
@@ -46,6 +47,19 @@ const initialValuesLogin = {
     password: "",
 };
 
+const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+            resolve(fileReader.result);
+        };
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+};
+
 const Form = () => {
     const [pageType, setPageType] = useState("login");
     const { palette } = useTheme();
@@ -57,50 +71,54 @@ const Form = () => {
 
     const register = async (values, onSubmitProps) => {
         // this allows us to send form info with image
-        const formData = new FormData();
-        for (let value in values) {
-            formData.append(value, values[value]);
+        const base64Image = await convertToBase64(values.picture);
+        const newValues = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            email: values.email,
+            password: values.password,
+            location: values.location,
+            occupation: values.occupation,
+            picture: base64Image,
         }
-        formData.append("picturePath", values.picture.name);
-
-        const savedUserResponse = await fetch(
-            `${process.env.REACT_APP_URL}/auth/register`,
-            {
-                method: "POST",
-                body: formData,
-            }
-        );
-        const savedUser = await savedUserResponse.json();
+        const savedUserResponse = await axios.post("http://localhost:3001/auth/register", JSON.stringify(newValues), {headers: {'Content-Type': 'application/json'}});
+        const savedUser = savedUserResponse.data;
         onSubmitProps.resetForm();
-
         if (savedUser) {
             setPageType("login");
         }
     };
 
     const login = async (values, onSubmitProps) => {
-        const loggedInResponse = await fetch(`${process.env.REACT_APP_URL}/auth/login`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(values),
-        });
-        const loggedIn = await loggedInResponse.json();
-        onSubmitProps.resetForm();
-        if (loggedIn) {
-            dispatch(
-                setLogin({
-                user: loggedIn.user,
-                token: loggedIn.token,
-                })
-            );
-            navigate("/home");
+        try {
+            const loggedInResponse = await axios.post("http://localhost:3001/auth/login",
+                                                    JSON.stringify(values),
+                                                    {headers: {'Content-Type': 'application/json'}});
+            const loggedIn = loggedInResponse.data;
+            onSubmitProps.resetForm();
+            if (loggedIn) {
+                dispatch(
+                    setLogin({
+                        user: loggedIn.user,
+                        token: loggedIn.token,
+                    })
+                );
+                navigate("/home");
+            }
+        } catch (err) {
+            console.log(err);
         }
     };
 
     const handleFormSubmit = async (values, onSubmitProps) => {
-        if (isLogin) await login(values, onSubmitProps);
-        if (isRegister) await register(values, onSubmitProps);
+        try {
+            if (isLogin) await login(values, onSubmitProps);
+            if (isRegister) await register(values, onSubmitProps);
+        } catch (err) {
+            console.log(err);
+        }
     };
+
 
     return (
     <Formik
@@ -182,9 +200,7 @@ const Form = () => {
                         <Dropzone
                             acceptedFiles='.jpg,.jpeg,.png'
                             multiple={false}
-                            onDrop={(acceptedFiles) =>
-                            setFieldValue("picture", acceptedFiles[0])
-                            }
+                            onDrop={(acceptedFiles) => setFieldValue("picture", acceptedFiles[0])}
                         >
                         {({ getRootProps, getInputProps }) => (
                             <Box

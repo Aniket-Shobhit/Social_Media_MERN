@@ -21,23 +21,28 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+app.use(bodyParser.json({ limit: "30mb" }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 app.use(express.json());
-app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin'}));
-app.use(bodyParser.json({ limit: '30mb', extended: true}));
-app.use(bodyParser.urlencoded({ limit:'30mb', extended: true }));
-// app.use(cors());
+
+// app.use(helmet());
+// app.use(helmet.crossOriginResourcePolicy({ policy: 'cross-origin'}));
+// app.use(bodyParser.urlencoded({ limit: "30mb" }));
+app.use(cors());
+// app.use((req, res, next) => {
+//     res.append('Access-Control-Allow-Origin', ["*"]);
+//     res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
+//     res.append('Access-Control-Allow-Headers', 'Content-Type', 'Authorization', 'Origin', 'X-Requested-With');
+//     next();
+// });
 app.use((req, res, next) => {
-    res.append('Access-Control-Allow-Origin', ["*"]);
-    res.append('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH');
-    res.append('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Origin', "*");
     next();
 });
 
-
-app.use(cors({
-    origin:["https://social-media-mern-7r25.onrender.com"]
-}));
+// app.use(cors({
+//     origin:["https://social-media-mern-7r25.onrender.com","http://localhost:3001"]
+// }));
 app.use('/assets', express.static(path.join(__dirname, 'public/assets')));
 
 // routes

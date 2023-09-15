@@ -6,6 +6,7 @@ import {
     ImageOutlined,
     MicOutlined,
     MoreHorizOutlined,
+    ConstructionOutlined,
 } from "@mui/icons-material";
 
 import {
@@ -24,10 +25,24 @@ import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
 import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
+import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
+
+const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+        const fileReader = new FileReader();
+        fileReader.readAsDataURL(file);
+        fileReader.onload = () => {
+            resolve(fileReader.result);
+        };
+        fileReader.onerror = (error) => {
+            reject(error);
+        };
+    });
+};
   
-const MyPostWidget = ({ picturePath }) => {
+const MyPostWidget = ({ pictureUrl }) => {
     
     const dispatch = useDispatch();
     const [isImage, setIsImage] = useState(false);
@@ -41,32 +56,47 @@ const MyPostWidget = ({ picturePath }) => {
     const medium = palette.neutral.medium;
 
     const handlePost = async () => {
-        
-        const formData = new FormData();
-        formData.append('userId', _id);
-        formData.append('description', post);   
-
-        if (image) {
-            formData.append('picture', image);
-            formData.append('picturePath', image.name);
+        try {
+            const values = {
+                userId: _id,
+                description: post,
+            }
+            if (image) {
+                const imageBase64 = await convertToBase64(image);
+                values.picture = imageBase64;
+            }
+    
+            const response = await axios.post(
+              "http://localhost:3001/posts",
+              JSON.stringify(values),
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "Content-Type": "application/json",
+                },
+              }
+            );
+    
+            const posts = response.data;
+            dispatch(setPosts({ posts }));
+            setImage(null);
+            setPost("");
+        } catch(err) {
+            console.log(err);
         }
-
-        const response = await fetch(`${process.env.REACT_APP_URL}/posts`, {
-            method: 'POST',
-            headers: { Authorization: `Bearer ${token}` },
-            body: formData,
-        });
-
-        const posts = await response.json();
-        dispatch(setPosts({ posts }));
-        setImage(null);
-        setPost("");
     }
+
+
+
+    const setImageHandler = (image) => {
+        setImage(image);
+    }
+
 
     return (
         <WidgetWrapper>
             <FlexBetween gap="1.5rem">
-                <UserImage image={picturePath} />
+                <UserImage image={pictureUrl} />
                 <InputBase
                     placeholder="What's on your mind..."
                     onChange={(e) => setPost(e.target.value)}
@@ -89,7 +119,7 @@ const MyPostWidget = ({ picturePath }) => {
                 <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
                     multiple={false}
-                    onDrop={(acceptedFiles) => setImage(acceptedFiles[0])}
+                    onDrop={(acceptedFiles) => setImageHandler(acceptedFiles[0])}
                 >
                     {({ getRootProps, getInputProps }) => (
                         <FlexBetween>
@@ -164,9 +194,9 @@ const MyPostWidget = ({ picturePath }) => {
                     disabled={!post}
                     onClick={handlePost}
                     sx={{
-                    color: palette.background.alt,
-                    backgroundColor: palette.primary.main,
-                    borderRadius: "3rem",
+                        color: palette.background.alt,
+                        backgroundColor: palette.primary.main,
+                        borderRadius: "3rem",
                     }}
                 >
                     POST

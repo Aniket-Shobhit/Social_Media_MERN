@@ -1,7 +1,8 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
-import multer from 'multer';
+import cloudStoreImage from '../utils/cloudinary.js';
+
 
 // register user
 export const register = async(req,res) => {
@@ -11,7 +12,7 @@ export const register = async(req,res) => {
             lastName,
             email,
             password,
-            picturePath,
+            picture,
             friends,
             location,
             occupation
@@ -19,13 +20,14 @@ export const register = async(req,res) => {
 
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
-
+        const cloudImage = await cloudStoreImage(picture);
+        const pictureUrl = cloudImage.secure_url;
         const newUser = new User({
             firstName,
             lastName,
             email,
             password: passwordHash,
-            picturePath,
+            pictureUrl,
             friends,
             location,
             occupation,
@@ -56,13 +58,13 @@ export const login = async (req,res) => {
 }
 
 // file storage
-const storage = multer.diskStorage({
-    destination: function(req, file, cb) {
-        cb(null, 'public/assets');
-    },
-    filename: function(req, file, cb) {
-        cb(null, file.originalname);
-    }
-});
+// const storage = multer.diskStorage({
+//     destination: function(req, file, cb) {
+//         cb(null, 'public/assets');
+//     },
+//     filename: function(req, file, cb) {
+//         cb(null, file.originalname);
+//     }
+// });
 
-export const upload = multer({ storage });
+// export const upload = multer({ storage });
