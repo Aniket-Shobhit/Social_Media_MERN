@@ -28,7 +28,7 @@ export const register = async(req,res) => {
             throw new Error(cloudImage.error);
         }
 
-        let pictureUrl = '';
+        let pictureUrl = 'http://res.cloudinary.com/dkbuod2hg/image/upload/v1694887833/r5jqhkrceggyxch7xiy7.png';
         if(picture != '') pictureUrl = cloudImage.secure_url;
 
         const newUser = new User({
