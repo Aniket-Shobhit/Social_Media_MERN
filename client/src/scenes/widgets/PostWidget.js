@@ -35,7 +35,6 @@ const PostWidget = ({
     const primary = palette.primary.main;
   
     const patchLike = async () => {
-        console.log('upar');
         const response = await fetch(`${process.env.REACT_APP_URL}/posts/${postId}/like`, {
             method: 'PATCH',
             headers: {
@@ -45,7 +44,6 @@ const PostWidget = ({
             body: JSON.stringify({ userId: loggedInUserId }),
         });
         const updatedPost = await response.json();
-        console.log(updatedPost);
         dispatch(setPost({ post: updatedPost }));
     };
   

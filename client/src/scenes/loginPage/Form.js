@@ -81,7 +81,7 @@ const Form = () => {
             occupation: values.occupation,
             picture: base64Image,
         }
-        const savedUserResponse = await axios.post("http://localhost:3001/auth/register", JSON.stringify(newValues), {headers: {'Content-Type': 'application/json'}});
+        const savedUserResponse = await axios.post(`${process.env.REACT_APP_URL}/auth/register`, JSON.stringify(newValues), {headers: {'Content-Type': 'application/json'}});
         const savedUser = savedUserResponse.data;
         onSubmitProps.resetForm();
         if (savedUser) {
@@ -91,7 +91,7 @@ const Form = () => {
 
     const login = async (values, onSubmitProps) => {
         try {
-            const loggedInResponse = await axios.post("http://localhost:3001/auth/login",
+            const loggedInResponse = await axios.post(`${process.env.REACT_APP_URL}/auth/login`,
                                                     JSON.stringify(values),
                                                     {headers: {'Content-Type': 'application/json'}});
             const loggedIn = loggedInResponse.data;

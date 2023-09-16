@@ -67,7 +67,7 @@ const MyPostWidget = ({ pictureUrl }) => {
             }
     
             const response = await axios.post(
-              "http://localhost:3001/posts",
+              `${process.env.REACT_APP_URL}/posts`,
               JSON.stringify(values),
               {
                 headers: {
