@@ -7,8 +7,8 @@ const UserImage = ({ image, size = '60px' }) => {
             style={{ objectFit: 'cover', borderRadius: '50%' }}
             width={size}
             height={size}
-            alt='user'
             src={image}
+            alt='user'
         />
         </Box>
     );
