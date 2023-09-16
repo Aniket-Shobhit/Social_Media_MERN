@@ -18,13 +18,13 @@ import Dropzone from "react-dropzone";
 import FlexBetween from "components/FlexBetween";
 
 const registerSchema = yup.object().shape({
-    firstName: yup.string().required("required"),
-    lastName: yup.string().required("required"),
-    email: yup.string().email("invalidddd email").required("required"),
-    password: yup.string().required("required"),
-    location: yup.string().required("required"),
-    occupation: yup.string().required("required"),
-    picture: yup.string().required("required"),
+    firstName: yup.string().required("required").min(2).max(50),
+    lastName: yup.string().required("required").min(2).max(50),
+    email: yup.string().email("invalid email").required("required").min(5),
+    password: yup.string().required("required").min(5),
+    location: yup.string(),
+    occupation: yup.string(),
+    picture: yup.string(),
 });
 
 const loginSchema = yup.object().shape({
@@ -61,7 +61,7 @@ const convertToBase64 = (file) => {
 };
 
 const Form = () => {
-    const [pageType, setPageType] = useState("login");
+    const [pageType, setPageType] = useState("register"); // TODO: change back to ["login"
     const { palette } = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -70,22 +70,28 @@ const Form = () => {
     const isRegister = pageType === "register";
 
     const register = async (values, onSubmitProps) => {
-        // this allows us to send form info with image
-        const base64Image = await convertToBase64(values.picture);
-        const newValues = {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            email: values.email,
-            password: values.password,
-            location: values.location,
-            occupation: values.occupation,
-            picture: base64Image,
-        }
-        const savedUserResponse = await axios.post(`${process.env.REACT_APP_URL}/auth/register`, JSON.stringify(newValues), {headers: {'Content-Type': 'application/json'}});
-        const savedUser = savedUserResponse.data;
-        onSubmitProps.resetForm();
-        if (savedUser) {
-            setPageType("login");
+        try {
+            let base64Image = '';
+            if(values.picture) base64Image = await convertToBase64(values.picture);
+            const newValues = {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                email: values.email,
+                password: values.password,
+                location: values.location,
+                occupation: values.occupation,
+                picture: base64Image,
+            }
+            
+            const savedUserResponse = await axios.post(`${process.env.REACT_APP_URL}/auth/register`, JSON.stringify(newValues), {headers: {'Content-Type': 'application/json'}});
+            const savedUser = savedUserResponse.data;
+
+            onSubmitProps.resetForm();
+            if (savedUser) {
+                setPageType("login");
+            }
+        } catch (err) {
+            console.log(err.message);
         }
     };
 
@@ -119,6 +125,13 @@ const Form = () => {
         }
     };
 
+    // const randomData = () => {
+    //     const randomFirstName = Math.random().toString(36).substring(5);
+    //     const randomLastName = Math.random().toString(36).substring(4);
+    //     const randomEmail = Math.random().toString(36).substring(6) + '@mail.com';
+
+    //     console.log('here');
+    // }
 
     return (
     <Formik
@@ -148,7 +161,7 @@ const Form = () => {
                 {isRegister && (
                 <>
                     <TextField
-                        label='First Name'
+                        label='First Name*'
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.firstName}
@@ -160,7 +173,7 @@ const Form = () => {
                         sx={{ gridColumn: 'span 2' }}
                     />
                     <TextField
-                        label='Last Name'
+                        label='Last Name*'
                         onBlur={handleBlur}
                         onChange={handleChange}
                         value={values.lastName}
@@ -226,7 +239,7 @@ const Form = () => {
                 )}
 
                 <TextField
-                    label='Email'
+                    label='Email*'
                     onBlur={handleBlur}
                     onChange={handleChange}
                     value={values.email}
@@ -236,7 +249,7 @@ const Form = () => {
                     sx={{ gridColumn: 'span 4' }}
                 />
                 <TextField
-                    label='Password'
+                    label='Password*'
                     type='password'
                     onBlur={handleBlur}
                     onChange={handleChange}
@@ -250,7 +263,36 @@ const Form = () => {
 
           {/* BUTTONS */}
             <Box>
-                <Button
+                {/* {isRegister && <Button
+                    // onClick={randomData}
+                    type='submit'
+                    sx={{
+                        m: '2rem 0',
+                        p: '1rem',
+                        width: '45%',
+                        backgroundColor: palette.primary.main,
+                        color: palette.background.alt,
+                        '&:hover': { color: palette.primary.main },
+                    }}
+                >
+                Fill Random data
+                </Button>} */}
+                {/* {isRegister && <Button
+                    type='submit'
+                    sx={{
+                        m: '2rem 0',
+                        ml: '10%',
+                        width: '45%',
+                        p: '1rem',
+                        backgroundColor: palette.primary.main,
+                        color: palette.background.alt,
+                        '&:hover': { color: palette.primary.main },
+                    }}
+                >
+                REGISTER
+                </Button>
+                } */}
+                {/* {isLogin && <Button
                     fullWidth
                     type='submit'
                     sx={{
@@ -261,8 +303,23 @@ const Form = () => {
                         '&:hover': { color: palette.primary.main },
                     }}
                 >
-                {isLogin ? 'LOGIN' : 'REGISTER'}
+                LOGIN
                 </Button>
+                } */}
+                {<Button
+                    fullWidth
+                    type='submit'
+                    sx={{
+                        m: '2rem 0',
+                        p: '1rem',
+                        backgroundColor: palette.primary.main,
+                        color: palette.background.alt,
+                        '&:hover': { color: palette.primary.main },
+                    }}
+                >
+                {isLogin ? 'LOGIN':'REGISTER'}
+                </Button>
+                }
                 <Typography
                     onClick={() => {
                         setPageType(isLogin ? 'register' : 'login');

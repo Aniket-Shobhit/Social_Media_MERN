@@ -20,8 +20,17 @@ export const register = async(req,res) => {
 
         const salt = await bcrypt.genSalt();
         const passwordHash = await bcrypt.hash(password, salt);
-        const cloudImage = await cloudStoreImage(picture);
-        const pictureUrl = cloudImage.secure_url;
+
+        let cloudImage = '';
+        if(picture != '') cloudImage = await cloudStoreImage(picture);
+
+        if(cloudImage.error) {
+            throw new Error(cloudImage.error);
+        }
+
+        let pictureUrl = '';
+        if(picture != '') pictureUrl = cloudImage.secure_url;
+
         const newUser = new User({
             firstName,
             lastName,
@@ -56,15 +65,3 @@ export const login = async (req,res) => {
         res.status(500).json({ error: err.message });
     }
 }
-
-// file storage
-// const storage = multer.diskStorage({
-//     destination: function(req, file, cb) {
-//         cb(null, 'public/assets');
-//     },
-//     filename: function(req, file, cb) {
-//         cb(null, file.originalname);
-//     }
-// });
-
-// export const upload = multer({ storage });
