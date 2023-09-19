@@ -3,33 +3,24 @@ import Form from './Form.js';
 
 const LoginPage = () => {
 
-    const theme = useTheme();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+    const theme = useTheme();
     return (
     <Box>
         <Box
             width="100%"
-            backgroundColor={theme.palette.background.alt}
             p="1rem 6%"
             textAlign="center"
+            position="sticky"
+            top="0"
+            zIndex="100"
+            paddingBottom='0rem'
         >
-            <Typography fontWeight="bold" fontSize="32px" color="primary">
-            Sociopedia
+            <Typography fontWeight="bold" fontSize='4rem' color="primary" sx={{ textShadow: '2px 2px 6px rgba(255, 255, 255, 0.5), -2px -2px 6px rgba(255, 255, 255, 0.5)' }}>
+                SOCIOVERSE
             </Typography>
         </Box>
-
-        <Box
-            width={isNonMobileScreens ? "50%" : "93%"}
-            p="2rem"
-            m="2rem auto"
-            borderRadius="1.5rem"
-            backgroundColor={theme.palette.background.alt}
-        >
-            <Typography fontWeight="500" variant="h5" sx={{ mb: "1.5rem" }}>
-                Welcome to Sociopedia, the Social Media for Sociopaths!
-            </Typography>
-            <Form />
-        </Box>
+        <Form />
     </Box>
     );
 };

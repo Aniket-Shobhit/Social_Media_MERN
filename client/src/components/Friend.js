@@ -45,7 +45,6 @@ const Friend = ({ friendId, name, subtitle, userPictureUrl }) => {
                 <Box
                 onClick={() => {
                     navigate(`/profile/${friendId}`);
-                    navigate(0);
                 }}
                 >
                 <Typography

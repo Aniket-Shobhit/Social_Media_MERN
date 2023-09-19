@@ -1,5 +1,6 @@
-@import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;700&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Mulish:wght@400;500;700&display=swap'); */
 /* @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap'); */
+@import url('https://fonts.googleapis.com/css2?family=Kalam:wght@300;400;700&family=Rubik:wght@400;500;700&display=swap');
 
 html,
 body,
@@ -7,5 +8,16 @@ body,
 .app {
   height: 100%;
   width: 100%;
-  font-family: "Rubik", sans-serif;
+  /* font-family: "Rubik", sans-serif; */
+  font-family: 'Kalam', cursive;
+}
+
+body {
+  /* background-image: url(https://img.freepik.com/premium-vector/background-popular-social-media-icons-black-white-colors-youtube-instagram-twitter-facebook-whatsapp-pinterest-snapchat-vimeo-google-skype-viber-others_444390-15173.jpg); */
+  /* background-image: url(https://www.shutterstock.com/shutterstock/photos/1931497916/display_1500/stock-vector-social-media-doodle-seamless-pattern-internet-background-hand-drawn-vector-illustration-sketch-1931497916.jpg); */  
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  
+  background-attachment: fixed;
 }

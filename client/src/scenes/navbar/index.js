@@ -43,7 +43,7 @@ const Navbar = () => {
     const fullName = `${user.firstName} ${user.lastName}`;
 
 
-    return (<FlexBetween padding="1rem 6%" backgroundColor={alt}>
+    return (<FlexBetween padding="1rem 6%" backgroundColor={alt} border='1px solid black' position='sticky' top='0' boxShadow='0px 0px 10px 0px rgba(0,0,0,0.75)' zIndex='100'>
         <FlexBetween gap='1.75rem'>
             <Typography
                 fontWeight='bold'
@@ -57,7 +57,7 @@ const Navbar = () => {
                     },
                 }}
             >
-                Social_App
+                SOCIOVERSE
             </Typography>
             {isNonMobileScreens && (
                 <FlexBetween backgroundColor={neutralLight}
