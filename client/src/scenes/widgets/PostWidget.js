@@ -26,7 +26,6 @@ const PostWidget = ({
     const [isComments, setIsComments] = useState(false);
     const dispatch = useDispatch();
     const token = useSelector((state) => state.token);
-    const mode = useSelector((state) => state.mode);
     const loggedInUserId = useSelector((state) => state.user._id);
     const isLiked = Boolean(likes[loggedInUserId]);
     const likeCount = Object.keys(likes).length;
@@ -34,7 +33,6 @@ const PostWidget = ({
     const { palette } = useTheme();
     const main = palette.neutral.main;
     const primary = palette.primary.main;
-    const isDarkMode = mode === 'dark';
 
     const patchLike = async () => {
         const response = await fetch(`${process.env.REACT_APP_URL}/posts/${postId}/like`, {

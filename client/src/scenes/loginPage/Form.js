@@ -9,6 +9,7 @@ import {
     useTheme,
 } from "@mui/material";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Formik } from "formik";
 import * as yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -63,7 +64,10 @@ const convertToBase64 = (file) => {
 const Form = () => {
     const theme = useTheme();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-    const [pageType, setPageType] = useState("register"); // TODO: change back to ["login"
+    const [pageType, setPageType] = useState("login"); // TODO: change back to ["login"
+    const [autoFilled, setAutoFilled] = useState(0);
+    const [isRegistering, setIsRegistering] = useState(false);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
     const { palette } = useTheme();
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -73,6 +77,7 @@ const Form = () => {
 
     const register = async (values, onSubmitProps) => {
         try {
+            setIsRegistering(true);
             let base64Image = '';
             if(values.picture) base64Image = await convertToBase64(values.picture);
             const newValues = {
@@ -87,7 +92,7 @@ const Form = () => {
             
             const savedUserResponse = await axios.post(`${process.env.REACT_APP_URL}/auth/register`, JSON.stringify(newValues), {headers: {'Content-Type': 'application/json'}});
             const savedUser = savedUserResponse.data;
-
+            setIsRegistering(false);
             onSubmitProps.resetForm();
             if (savedUser) {
                 setPageType("login");
@@ -99,11 +104,13 @@ const Form = () => {
 
     const login = async (values, onSubmitProps) => {
         try {
+            setIsLoggingIn(true);
             const loggedInResponse = await axios.post(`${process.env.REACT_APP_URL}/auth/login`,
                                                     JSON.stringify(values),
                                                     {headers: {'Content-Type': 'application/json'}});
             const loggedIn = loggedInResponse.data;
             onSubmitProps.resetForm();
+            setIsLoggingIn(false);
             if (loggedIn) {
                 dispatch(
                     setLogin({
@@ -114,6 +121,7 @@ const Form = () => {
                 navigate("/home");
             }
         } catch (err) {
+            setIsLoggingIn(false);
             console.log(err);
         }
     };
@@ -129,8 +137,10 @@ const Form = () => {
 
 
     const autoFill = (values) => {
+        if(isLoggingIn) return;
         values.email = 'hello@example.com';
         values.password = 'helloexample';
+        setAutoFilled(autoFilled+1);
     }
 
     return (
@@ -284,7 +294,6 @@ s                            error={
                 <Box>
                     {isLogin && <Button
                         onClick={autoFill.bind(this,values)}
-                        type='submit'
                         sx={{
                             m: '2rem 0',
                             p: '1rem',
@@ -296,7 +305,7 @@ s                            error={
                     >
                     Auto Fill
                     </Button>}
-                    {isLogin && <Button
+                    {isLogin && (!isLoggingIn ? <Button
                         type='submit'
                         sx={{
                             m: '2rem 0',
@@ -309,9 +318,23 @@ s                            error={
                         }}
                     >
                     Login
-                    </Button>
+                    </Button> : 
+                    <LoadingButton
+                        loading
+                        sx={{
+                            m: '2rem 0',
+                            ml: '10%',
+                            width: '45%',
+                            p: '1rem',
+                        }}
+                        loadingPosition="start"
+                        variant="outlined"
+                    >
+                        Login
+                    </LoadingButton>)
                     }
-                    {isRegister && <Button
+                    
+                    {isRegister && (!isRegistering ? <Button
                         fullWidth
                         type='submit'
                         sx={{
@@ -322,21 +345,21 @@ s                            error={
                             '&:hover': { color: palette.primary.main },
                         }}
                     >
-                    Register
-                    </Button>}
-                    {/* <Button
+                        Register
+                    </Button> : 
+                    <LoadingButton
                         fullWidth
-                        type='submit'
                         sx={{
-                            m: '1.5rem 0',
+                            m: '1.3rem 0',
                             p: '1rem',
-                            backgroundColor: palette.primary.main,
-                            color: palette.background.alt,
-                            '&:hover': { color: palette.primary.main },
                         }}
+                        loading
+                        loadingPosition="start"
+                        variant="outlined"
                     >
-                    {isLogin ? 'LOGIN':'REGISTER'}
-                    </Button> */}
+                        Register
+                    </LoadingButton>)
+                    }
                     <Typography
                         onClick={() => {
                             setPageType(isLogin ? 'register' : 'login');

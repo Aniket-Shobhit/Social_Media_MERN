@@ -6,7 +6,6 @@ import {
     ImageOutlined,
     MicOutlined,
     MoreHorizOutlined,
-    ConstructionOutlined,
 } from "@mui/icons-material";
 
 import {
@@ -105,7 +104,7 @@ const MyPostWidget = ({ pictureUrl }) => {
                     width: "100%",
                     backgroundColor: palette.neutral.light,
                     borderRadius: "2rem",
-                    padding: "1rem 2rem",
+                    padding: "0.5rem 2rem",
                     }}
                 />
             </FlexBetween>
