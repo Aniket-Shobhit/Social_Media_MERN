@@ -1,13 +1,15 @@
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPosts } from 'state';
 import PostWidget from './PostWidget';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const PostsWidget = ({ userId, isProfile = false }) => {
 
     const dispatch = useDispatch();
     const posts = useSelector((state) => state.posts);
     const token = useSelector((state) => state.token);
+    const [isFetching, setIsFetching] = useState(false);
 
     const getPosts = async () => {
         const response = await fetch(`${process.env.REACT_APP_URL}/posts`, {
@@ -31,18 +33,20 @@ const PostsWidget = ({ userId, isProfile = false }) => {
     };
 
     useEffect(() => {
+        setIsFetching(true);
         if (isProfile) {
             getUserPosts();
         } 
         else {
             getPosts();
         }
+        setIsFetching(false);
     }, []); 
     // eslint-disable-line react-hooks/exhaustive-deps
 
     return (
     <>
-        {posts.map(
+        {isFetching ?  <CircularProgress sx={{ml:'16rem', mt:'3rem'}} disableShrink /> : (posts.map(
             ({
                 _id,
                 userId,
@@ -68,7 +72,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
                 comments={comments}
             />
             )
-        )}
+        ))}
     </>
   );
 };

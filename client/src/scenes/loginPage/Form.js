@@ -64,7 +64,7 @@ const convertToBase64 = (file) => {
 const Form = () => {
     const theme = useTheme();
     const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-    const [pageType, setPageType] = useState("login"); // TODO: change back to ["login"
+    const [pageType, setPageType] = useState("login");
     const [autoFilled, setAutoFilled] = useState(0);
     const [isRegistering, setIsRegistering] = useState(false);
     const [isLoggingIn, setIsLoggingIn] = useState(false);

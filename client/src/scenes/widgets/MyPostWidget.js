@@ -19,6 +19,7 @@ import {
     useMediaQuery,
 } from "@mui/material";
 
+import LoadingButton from '@mui/lab/LoadingButton';
 import FlexBetween from "components/FlexBetween";
 import Dropzone from "react-dropzone";
 import UserImage from "components/UserImage";
@@ -47,6 +48,7 @@ const MyPostWidget = ({ pictureUrl }) => {
     const [isImage, setIsImage] = useState(false);
     const [image, setImage] = useState(null);
     const [post, setPost] = useState("");
+    const [isLoading, setIsLoading] = useState(false);
     const { palette } = useTheme();
     const { _id } = useSelector((state) => state.user);
     const token = useSelector((state) => state.token);
@@ -56,6 +58,7 @@ const MyPostWidget = ({ pictureUrl }) => {
 
     const handlePost = async () => {
         try {
+            setIsLoading(true);
             const values = {
                 userId: _id,
                 description: post,
@@ -80,6 +83,7 @@ const MyPostWidget = ({ pictureUrl }) => {
             dispatch(setPosts({ posts }));
             setImage(null);
             setPost("");
+            setIsLoading(false);
         } catch(err) {
             console.log(err);
         }
@@ -113,7 +117,7 @@ const MyPostWidget = ({ pictureUrl }) => {
                 border={`1px solid ${medium}`}
                 borderRadius="5px"
                 mt="1rem"
-                p="1rem"
+                p="0.4rem"
             >
                 <Dropzone
                     acceptedFiles=".jpg,.jpeg,.png"
@@ -125,13 +129,13 @@ const MyPostWidget = ({ pictureUrl }) => {
                             <Box
                                 {...getRootProps()}
                                 border={`2px dashed ${palette.primary.main}`}
-                                p="1rem"
+                                p="0.5rem"
                                 width="100%"
                                 sx={{ "&:hover": { cursor: "pointer" } }}
                             >
                                 <input {...getInputProps()} />
                                 {!image ? (
-                                    <p>Add Image Here</p>
+                                    <p style={{margin:'auto'}}>Add Image Here</p>
                                 ) : (
                                     <FlexBetween>
                                         <Typography>{image.name}</Typography>
@@ -153,20 +157,19 @@ const MyPostWidget = ({ pictureUrl }) => {
             </Box>
             )}
     
-            <Divider sx={{ margin: "1.25rem 0" }} />
+            <Divider sx={{ margin: "1rem 0" }} />
     
             <FlexBetween>
                 <FlexBetween gap="0.25rem" onClick={() => setIsImage(!isImage)}>
-                    <ImageOutlined sx={{ color: mediumMain }} />
+                    <ImageOutlined sx={{ color: palette.primary.main }} />
                     <Typography
-                        color={mediumMain}
-                        sx={{ "&:hover": { cursor: "pointer", color: medium } }}
+                        sx={{ "&:hover": { cursor: "pointer", color: palette.primary.main } }}
                         >
                         Image
                     </Typography>
                 </FlexBetween>
     
-                {isNonMobileScreens ? (
+                {/* {isNonMobileScreens ? (
                     <>
                         <FlexBetween gap="0.25rem">
                             <GifBoxOutlined sx={{ color: mediumMain }} />
@@ -187,19 +190,31 @@ const MyPostWidget = ({ pictureUrl }) => {
                     <FlexBetween gap="0.25rem">
                         <MoreHorizOutlined sx={{ color: mediumMain }} />
                     </FlexBetween>
-                )}
+                )} */}
         
-                <Button
-                    disabled={!post}
+                {!isLoading ? <Button
+                    disabled={!(post || image)}
                     onClick={handlePost}
                     sx={{
                         color: palette.background.alt,
                         backgroundColor: palette.primary.main,
                         borderRadius: "3rem",
+                        width: "10rem",
                     }}
                 >
                     POST
-                </Button>
+                </Button> :
+                <LoadingButton
+                    loading
+                    sx={{
+                        borderRadius: "3rem",
+                        width: "10rem",
+                    }}
+                    loadingPosition="start"
+                    variant="outlined"
+                >
+                    POST
+                </LoadingButton>}
             </FlexBetween>
         </WidgetWrapper>
     );
