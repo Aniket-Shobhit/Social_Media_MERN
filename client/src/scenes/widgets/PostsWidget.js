@@ -18,6 +18,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         });
         const data = await response.json();
         dispatch(setPosts({ posts: data }));
+        setIsFetching(false);
     };
 
     const getUserPosts = async () => {
@@ -30,6 +31,7 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         );
         const data = await response.json();
         dispatch(setPosts({ posts: data }));
+        setIsFetching(false);
     };
 
     useEffect(() => {
@@ -40,7 +42,6 @@ const PostsWidget = ({ userId, isProfile = false }) => {
         else {
             getPosts();
         }
-        setIsFetching(false);
     }, []); 
     // eslint-disable-line react-hooks/exhaustive-deps
 
